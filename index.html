@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="loadingScreenCSS.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="board.js"></script>
+    <script src="player.js"></script>
+    <title>Monopoly</title>
+</head>
+<body onload="isLocalStorage();">
+  <div class="div-hadash-gadol-meod" style="position: relative;" id="startinglocation">
+    <div class="welcome-page" id="welcome-page">
+      <button class="InstBTN" id="InstBTN"  onclick= "InstFunc();">Game Info</button>
+      <div class="top-center-div" id="moveUp">
+          <div class="top-part"><h1>Welcome</h1></div>
+          <div class="mid-part"><h2></h2></div>
+          <div class="bot-part"><h3>Let's play some Monopoly!</h3></div>
+          <div class="buttons-div">
+              <button class="PlayBTN" onclick="playerInfo();">New Game</button>
+             
+              <button class="ContinueBTN" id="ContinueBTN" onclick="loadLocalStorge();">Continue</button>
+
+          </div>
+      </div>
+
+        <!--instructions -->
+                    
+        <div id="InstModal" class="modal">
+
+          <!-- Modal content -->
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 dir="rtl">חוקי המשחק:</h2>
+            <p dir="rtl">
+              •	בכניסה למשחק המשתמש יוכל להחליט אם ברצונו להתחיל משחק חדש או להמשיך במשחק הקודם.
+             <br>
+             •	רישום למשחק חדש – על המשתמשים למלא את כלל השדות הכוללים כתיבת שם, בחירת שחקן (לא ניתן לבחור את אותה הדמות) את המגרש עליו הם רוצים לשחק ואת סכום הכסף שאיתו ברצונם להתחיל את המשחק.
+              <br>
+              •	בלחיצה על הכפתור נזרקות הקוציות והשחקן זז בהתאם.
+              <br>
+              •	כאשר ידרוך השחקן על משבצת שניתן לקנות יפתח לו חלון שיציע קניה – במקרה וירצה לרכוש את המקום, הכסף ירד מהסכום שיש לו בבנק והשטח יצבע בצבעו של המשתמש.
+              <br>
+              •	במקרה בו היריב דורך על שטחו של השחקן, יהיה עליו לשלם לו עמלת דריכה.
+              <br>
+              •	במקרה בו ידרוך של משבצת chance יפתח עבורו קלף עם עובדה חדשה כמו למשל "נפל לך האינטרנט לך ישר לכלא".
+              <br>
+              •	משבצת 10 במשטח המשחק הינו הכלא, בדריכה על משבצת 30 המשתמש ישלח לכלא ל- 3 סבבים ולא יוכל לשחק.
+              <br>
+              •	במקרה של 3 דאבלים רצופים בקוביות השחקן ישלח לכלא וימתין 3 סבבים
+               <br>
+               •	כאשר עלינו לשלם tax  הכסף נשמר בקופה (ניתן לראות בצד ימין למטה במשך את סכום הקופה) כאשר מישהו דורך על משבצת בה כתוב chest כל הכסף שהצטבר בקופה יעבור אליו.
+                <br>
+              •	בצד ימין במשך ניתן לראות את הכסף של כל אחד מהמשתמשים, את הניקוד שלהם (מחושב בהתאם לנכסים והכסף )  
+              <br>
+              •	כל משבצת שניתן לרכוש הינה לחיצה – ולחיצה עליה תחשוף בפנינו פרטים נוספים אודותיה.
+              <br>
+              •	שמירת הנתונים מתבצעת בסיומו של כל תור.
+            </p>
+          </div>
+
+        </div>
+        <!--instructions -->
+
+      <div class="players-info" id="appearUp">
+          <div class="player1-info">
+              <h4>First Player</h4>
+              <div class="form fname">
+                  <input id="player1Name" type="text" name="fname" autocomplete="off" required/>
+                  <label for="fname" class="label">
+                      <p class="fname content">Name</p>
+                  </label>
+              </div>
+              <div class="fig-selection">
+                  <div class="figures">
+                      <ul>
+                          <li>
+                            <input type="checkbox" id="myCheckbox1" />
+                            <label for="myCheckbox1" onclick="chooseFig(1,this);"><img src="images/player-images/fig1.png" alt=""/></label>
+                          </li>
+                          <li>
+                        
+                            <input type="checkbox" id="myCheckbox2" />
+                            <label for="myCheckbox2" onclick="chooseFig(1,this);"><img src="images/player-images/fig2.png" alt=""/></label>
+                          </li>
+                          <li>
+                        
+                            <input type="checkbox" id="myCheckbox3" />
+                            <label for="myCheckbox3" onclick="chooseFig(1,this);"><img src="images/player-images/fig3.png" alt=""/></label>
+                          </li>
+                        </ul>     
+                  </div>
+              </div>
+          </div>
+          <div class="player2-info">
+              <h4>Second Player</h4>
+              <div class="form fname">
+                  <input id="player2Name" type="text" name="fname" autocomplete="off" required/>
+                  <label for="fname" class="label">
+                      <p class="fname content">Name</p>
+                  </label>
+              </div>
+              <div class="fig-selection">
+                  <div class="figures">
+                      <ul>
+                          <li>
+                            <input type="checkbox" id="myCheckbox4"/>
+                            <label for="myCheckbox4"onclick="chooseFig(2,this);"><img src="images/player-images/fig1.png" alt=""/></label>
+                          </li>
+                          <li>
+                            <input type="checkbox" id="myCheckbox5"/>
+                            <label for="myCheckbox5"onclick="chooseFig(2,this);"><img src="images/player-images/fig2.png" alt=""/></label>
+                          </li>
+                          <li>
+                            <input type="checkbox" id="myCheckbox6"/>
+                            <label for="myCheckbox6" onclick="chooseFig(2,this);"><img src="images/player-images/fig3.png" alt=""/></label>
+                          </li>
+                        </ul>     
+                  </div>
+              </div>
+          </div>
+          <div class="themeSelection">
+              <div class="game-fig">
+                  <p>Choose game theme</p>
+                  <center><ul>
+                      <li>
+                        <input type="checkbox" id="video-game-fig"style="display: none"/>
+                        <label for="video-game-fig" onclick="toggleTheme(this,1);"><img src="images/loading-game/video-game.png" alt=""/></label>
+                      </li>
+                      <li>
+                        <input type="checkbox" id="fooden-game-fig"style="display: none"/>
+                        <label for="fooden-game-fig" onclick="toggleTheme(this,2);"><img src="images/loading-game/fooden.png" alt=""/></label>
+                      </li>
+                    </ul> </center>    
+              </div>
+              <div class="Range"> 
+                <div class="slidecontainer">
+                    <p style="margin-bottom: 10px;">Choose starting cash</p>
+                    <input type="range" min="1000" max="2000" value="1500" class="slider" id="myRange">
+                    <p>Value: <span id="kesef"></span></p>
+                    </div>
+            </div>
+          </div>
+          
+          <div class="buttons-div">
+             <button class="StartBTN" onclick="loadData()">Let's go</button>
+          </div>
+      </div>
+  </div>
+
+    <!---->
+    <div class="playboard-monopoly" >
+      <div id="grid-container">
+        <div class="table" id="blur">
+          <div class="center-div">
+            <button onclick="turn()" id="diceButton">ROLL</button>
+            <div class="two-dice-div">
+              <div class="dice" id="moveDiceRight">
+                <ol class="die-list even-roll" data-roll="1" id="die-1">
+                  <li class="die-item" data-side="1">
+                    <span class="dot"></span>
+                  </li>
+                  <li class="die-item" data-side="2">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </li>
+                  <li class="die-item" data-side="3">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </li>
+                  <li class="die-item" data-side="4">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </li>
+                  <li class="die-item" data-side="5">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </li>
+                  <li class="die-item" data-side="6">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </li>
+                </ol>
+                <ol class="die-list odd-roll" data-roll="1" id="die-2">
+                  <li class="die-item" data-side="1">
+                    <span class="dot"></span>
+                  </li>
+                  <li class="die-item" data-side="2">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </li>
+                  <li class="die-item" data-side="3">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </li>
+                  <li class="die-item" data-side="4">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </li>
+                  <li class="die-item" data-side="5">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </li>
+                  <li class="die-item" data-side="6">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </li>
+                </ol>
+              </div>
+  
+
+            </div>
+            
+
+
+
+            <div class="quest-cards set1">
+              <img draggable="false" src="images/loading-game/chance.png" alt="">
+            </div>
+            <h1>Monopoly</h1>
+          </div>
+          <div class="row1">
+            <div class="corner corner1" id="div0">
+              <div class="mid-text"></div>
+              <div class="image"></div>
+              <div class="character" id="char1"></div>
+              <div class="character" id="char2"></div>
+            </div>
+            <div class="middle1">
+              <div class="card purchaseable" onclick="propertyClickInfo('div9');" id="div9">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-bottom"></div>
+                <div class="top light-blue">9</div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div8');" id="div8">
+                <div class="mid-text"></div> 
+                <div class="image"></div>
+                <div class="price-text-bottom"></div>
+                <div class="top light-blue">8</div>
+              </div>
+              <div class="card chance" id="div7">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div6');" id="div6">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-bottom"></div>
+                <div class="top light-blue">6</div>
+              </div>
+              <div class="card train purchaseable" onclick="propertyClickInfo('div5');" id="div5">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-bottom"></div>
+              </div>
+              <div class="card tax" id="div4">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-bottom"></div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div3');" id="div3">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-bottom"></div>
+                <div class="top brown">3</div>
+  
+              </div>
+              <div class="card chest" id="div2">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div1');" id="div1">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-bottom"></div>
+                <div class="top brown">1</div>
+              </div>
+            </div>
+          </div>
+          <div class="row2">
+            <div class="corner corner2 dull" id="div10">
+              <div class="mid-text"></div>
+              <div class="image"></div>
+            </div>
+            <div class="middle2">
+              <div class="card purchaseable" onclick="propertyClickInfo('div19');" id="div19">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-left"></div>   
+                <div class="right orange">19</div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div18');" id="div18">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-left"></div>
+                <div class="right orange">18</div>
+              </div>
+              <div class="card chest"  id="div17">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div16');" id="div16">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-left"></div>
+                <div class="right orange">16</div>
+              </div>
+              <div class="card purchaseable train" onclick="propertyClickInfo('div15');" id="div15">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-left"></div>
+              </div>
+              <div class="card purchaseable" id="div14" onclick="propertyClickInfo('div14');" class="tax">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-left"></div>
+                <div class="right pink">14</div>
+              </div>
+              <div class="card purchaseable" id="div13" onclick="propertyClickInfo('div13');" class="purchaseable">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-left"></div>
+                <div class="right pink">13</div>
+              </div>
+              <div class="card purchaseable add-on" onclick="propertyClickInfo('div12');" id="div12">
+                <div class="rights mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-left"></div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div11');" id="div11">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-left"></div>
+                <div class="right pink">11</div>
+              </div>
+            </div>
+          </div>
+          <div class="row3">
+            <div class="corner dull corner3" id="div20">
+              <div class="mid-text"></div>
+              <div class="image"></div>
+            </div>
+            <div class="middle3">
+              <div class="card purchaseable" onclick="propertyClickInfo('div21');" id="div21">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-top"></div>
+                <div class="bottom red">21</div>
+              </div>
+              <div class="card purchaseable" id="div22">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div23');" id="div23">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-top"></div>
+                <div class="bottom red">23</div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div24');" id="div24">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-top"></div>
+                <div class="bottom red">24</div>
+  
+              </div>
+              <div class="card purchaseable train" onclick="propertyClickInfo('div25');" id="div25">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-top"></div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div26');" id="div26">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-top"></div>
+                <div class="bottom yellow">26</div>
+  
+              </div>
+              <div class="card community-chest" onclick="propertyClickInfo('div27');" id="div27">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-top"></div>
+                <div class="bottom yellow">27</div>
+  
+              </div>
+              <div class="card purchaseable add-on" onclick="propertyClickInfo('div28');" id="div28">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-top"></div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div29');" id="div29">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-top"></div>
+                <div class="bottom yellow">29</div>
+  
+              </div>
+            </div>
+          </div>
+          <div class="row4">
+            <div class="corner corner4 go-to-jail" id="div30">
+              <div class="mid-text"></div>
+              <div class="image"></div>
+            </div>
+            <div class="middle4">
+              <div class="card purchaseable" onclick="propertyClickInfo('div31');" id="div31">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-right"></div>
+                <div class="left green">31</div>
+  
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div32');" id="div32">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-right"></div>
+                <div class="left green">32</div>
+  
+              </div>
+              <div class="card chest" id="div33">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div34');" id="div34">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-right"></div>
+                <div class="left green">34</div>
+  
+              </div>
+              <div class="card purchaseable train" onclick="propertyClickInfo('div35');" id="div35">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-right"></div>
+              </div>
+              <div class="card chance" id="div36">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div37');" id="div37">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-right"></div>
+                <div class="left blue">37</div>
+  
+              </div>
+              <div class="card tax" id="div38">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-right"></div>
+              </div>
+              <div class="card purchaseable" onclick="propertyClickInfo('div39');" id="div39">
+                <div class="mid-text"></div>
+                <div class="image"></div>
+                <div class="price-text-right"></div>
+                <div class="left blue">39</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="popup">
+          <div class="top-popup">
+              <div class="top-div"></div>
+              <div class="property-img" id="property-img"></div>
+              <div class="additional-info-popup-ph"></div> 
+              <div class="additional-info-popup-ph"></div> 
+              <div class="buttons-div">
+                <button class="OKbtn" id="OKbtn" onclick="buyCard();">Yes</button>
+                <button class="NObtn" id="NObtn" onclick="finishTurn(true)">No</button>
+                <button class="CLOSEbtn" id="CLOSEbtn" onclick="toggleBtn(true)">Close</button>
+              </div>
+          </div>    
+      </div> 
+  </div>
+  <div class="statistics">
+  <div class="player1-stats" id="player1">
+    <div class="img">
+    </div>
+    <div class="name">
+    </div>
+    <div class="cash">
+    </div>
+    <div class="cards">
+      <p>none</p>
+    </div>
+    <div class="points">
+    </div>
+  </div>
+  <div class="player2-stats" id="player2">
+    <div class="img">
+    </div>
+    <div class="name">
+    </div>
+    <div class="cash">
+    </div>
+    <div class="cards">
+      <p>none</p>
+    </div>
+  </div>
+  <div id="chest">
+    <div class="name"><p>Community Chest</p></div>
+    <div class="img"><img src="images/video-game/community-chest.png" alt=""></div>
+    <div class="cash"></div>
+  </div> 
+  <button onclick="endGame();" id="endBTN">END GAME</button>
+    </div>
+       
+  </div>
+  <script src="loadingScreenJS.js"></script>    
+  <script src="fillGame.js"></script>
+  <script src="blur-modal.js"></script>
+</body>
+</html>
